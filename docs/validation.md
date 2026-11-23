@@ -289,3 +289,33 @@ real Semgrep SARIF merged: 15 unique findings, 3 duplicates removed.
   intentional, dummy values belong in obvious placeholder form.
 - SARIF severity mapping is conservative (error->high, warning->medium)
   because SARIF levels carry no impact context.
+
+## Live-plugin egress lab (2026-11-23)
+
+Loopback-only lab, no external targets. Scope: `127.0.0.1` only,
+`allow_active: true`. In-scope HTTP server on `127.0.0.1:8443` (page links
+to an out-of-scope URL); canary server on `127.0.0.2:8443` logging every
+request it receives.
+
+Tools under test: httpx v1.12.0 and katana v1.8.0 (official
+projectdiscovery release binaries), driven through `recon.run(...,
+execute=True)` and directly with `-proxy` pointed at `sentinel proxy`.
+
+Results:
+
+- In-scope request through the auto-started egress proxy: 200, title and
+  technology detected (httpx); crawl of the in-scope page succeeded
+  (katana).
+- Direct out-of-scope request (`httpx -u http://127.0.0.2:8443 ...`
+  through the proxy): refused with 403 "no scope rule matches address".
+- Crawled out-of-scope link (katana following the page's link to
+  `127.0.0.2:8443`): refused at the proxy.
+- The binaries' own chatter to an unrelated hardcoded hostname
+  (`burpsuite`, a ProjectDiscovery proxy-detection probe): refused.
+- Canary log after all runs: empty - no out-of-scope connection was
+  ever established.
+
+Conclusion: with `-proxy` set, the documented HTTP path of these two
+binaries stays inside the scope-enforcing proxy. This does not bound raw
+sockets, DNS lookups, or future binary behavior: the proxy is scope
+enforcement for legitimate tools, not a sandbox.
