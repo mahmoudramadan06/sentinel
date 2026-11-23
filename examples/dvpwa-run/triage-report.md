@@ -50,7 +50,7 @@
 - **Why it matters:** Service '$SERVICE' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
 - **Triage rationale:** [offline template] MEDIUM severity rule 'sarif.Semgrep OSS.yaml.docker-compose.security.no-new-privileges.no-new-privileges' fired at /tmp/dvpwa/docker-compose.yml:4 with medium confidence; ranked by the deterministic severity x confidence score.
 - **Fix:** Service '$SERVICE' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
-ð Enable cross-file analysis and Pro rules for free at sg.run/pro
+💎 Enable cross-file analysis and Pro rules for free at sg.run/pro
 - **Investigation:** needs-human-review (deterministic:generic planner, 1 steps, policy-done)
   Context gathered; no deterministic playbook exists for this rule family.
   - rejected: unknown file '/tmp/dvpwa/docker-compose.yml' (no locations)
@@ -63,7 +63,7 @@
 - **Why it matters:** Service '$SERVICE' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
 - **Triage rationale:** [offline template] MEDIUM severity rule 'sarif.Semgrep OSS.yaml.docker-compose.security.no-new-privileges.no-new-privileges' fired at /tmp/dvpwa/docker-compose.yml:14 with medium confidence; ranked by the deterministic severity x confidence score.
 - **Fix:** Service '$SERVICE' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
-ð Enable cross-file analysis and Pro rules for free at sg.run/pro
+💎 Enable cross-file analysis and Pro rules for free at sg.run/pro
 - **Investigation:** needs-human-review (deterministic:generic planner, 1 steps, policy-done)
   Context gathered; no deterministic playbook exists for this rule family.
   - rejected: unknown file '/tmp/dvpwa/docker-compose.yml' (no locations)
@@ -76,7 +76,7 @@
 - **Why it matters:** Detected possible formatted SQL query. Use parameterized queries instead.
 - **Triage rationale:** [offline template] MEDIUM severity rule 'sarif.Semgrep OSS.python.lang.security.audit.formatted-sql-query.formatted-sql-query' fired at /tmp/dvpwa/sqli/dao/student.py:45 with medium confidence; ranked by the deterministic severity x confidence score.
 - **Fix:** Detected possible formatted SQL query. Use parameterized queries instead.
-ð Enable cross-file analysis and Pro rules for free at sg.run/pro
+💎 Enable cross-file analysis and Pro rules for free at sg.run/pro
 - **Investigation:** needs-human-review (deterministic:generic planner, 1 steps, policy-done)
   Context gathered; no deterministic playbook exists for this rule family.
   - rejected: unknown file '/tmp/dvpwa/sqli/dao/student.py' (no locations)
@@ -89,7 +89,7 @@
 - **Why it matters:** It looks like MD5 is used as a password hash. MD5 is not considered a secure password hash because it can be cracked by an attacker in a short amount of time. Use a suitable password hashing function such as scrypt. You can use 'hashlib.scrypt'.
 - **Triage rationale:** [offline template] MEDIUM severity rule 'sarif.Semgrep OSS.python.lang.security.audit.md5-used-as-password.md5-used-as-password' fired at /tmp/dvpwa/sqli/dao/user.py:41 with medium confidence; ranked by the deterministic severity x confidence score.
 - **Fix:** It looks like MD5 is used as a password hash. MD5 is not considered a secure password hash because it can be cracked by an attacker in a short amount of time. Use a suitable password hashing function such as scrypt. You can use 'hashlib.scrypt'.
-ð Enable cross-file analysis and Pro rules for free at sg.run/pro
+💎 Enable cross-file analysis and Pro rules for free at sg.run/pro
 - **Investigation:** needs-human-review (deterministic:generic planner, 1 steps, policy-done)
   Context gathered; no deterministic playbook exists for this rule family.
   - rejected: unknown file '/tmp/dvpwa/sqli/dao/user.py' (no locations)
@@ -114,7 +114,7 @@
 - **Why it matters:** Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.
 - **Triage rationale:** [offline template] MEDIUM severity rule 'sarif.Semgrep OSS.javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring' fired at /tmp/dvpwa/sqli/static/js/materialize.js:645 with medium confidence; ranked by the deterministic severity x confidence score.
 - **Fix:** Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.
-ð Enable cross-file analysis and Pro rules for free at sg.run/pro
+💎 Enable cross-file analysis and Pro rules for free at sg.run/pro
 - **Investigation:** needs-human-review (deterministic:generic planner, 1 steps, policy-done)
   Context gathered; no deterministic playbook exists for this rule family.
   - rejected: unknown file '/tmp/dvpwa/sqli/static/js/materialize.js' (no locations)
@@ -127,7 +127,7 @@
 - **Why it matters:** Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.
 - **Triage rationale:** [offline template] MEDIUM severity rule 'sarif.Semgrep OSS.javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring' fired at /tmp/dvpwa/sqli/static/js/materialize.js:661 with medium confidence; ranked by the deterministic severity x confidence score.
 - **Fix:** Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.
-ð Enable cross-file analysis and Pro rules for free at sg.run/pro
+💎 Enable cross-file analysis and Pro rules for free at sg.run/pro
 - **Investigation:** needs-human-review (deterministic:generic planner, 1 steps, policy-done)
   Context gathered; no deterministic playbook exists for this rule family.
   - rejected: unknown file '/tmp/dvpwa/sqli/static/js/materialize.js' (no locations)
@@ -140,7 +140,7 @@
 - **Why it matters:** Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.
 - **Triage rationale:** [offline template] MEDIUM severity rule 'sarif.Semgrep OSS.javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring' fired at /tmp/dvpwa/sqli/static/js/materialize.js:699 with medium confidence; ranked by the deterministic severity x confidence score.
 - **Fix:** Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.
-ð Enable cross-file analysis and Pro rules for free at sg.run/pro
+💎 Enable cross-file analysis and Pro rules for free at sg.run/pro
 - **Investigation:** needs-human-review (deterministic:generic planner, 1 steps, policy-done)
   Context gathered; no deterministic playbook exists for this rule family.
   - rejected: unknown file '/tmp/dvpwa/sqli/static/js/materialize.js' (no locations)
