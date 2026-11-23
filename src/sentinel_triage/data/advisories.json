@@ -1,0 +1,79 @@
+{
+  "_comment": "Small built-in offline advisory set for demonstration. It is intentionally tiny; for real use, pair this tool with osv-scanner or pip-audit and feed their JSON output through the importer.",
+  "pypi": {
+    "requests": [
+      {
+        "affected_below": "2.20.0",
+        "id": "CVE-2018-18074",
+        "severity": "high",
+        "summary": "Requests before 2.20.0 sends the HTTP Authorization header to an https URI upon an http-to-https redirect.",
+        "fix": "Upgrade requests to >= 2.20.0."
+      }
+    ],
+    "urllib3": [
+      {
+        "affected_below": "1.26.5",
+        "id": "CVE-2021-33503",
+        "severity": "high",
+        "summary": "urllib3 before 1.26.5 allows catastrophic backtracking (ReDoS) via crafted URLs when an attacker controls the URL.",
+        "fix": "Upgrade urllib3 to >= 1.26.5."
+      }
+    ],
+    "flask": [
+      {
+        "affected_below": "1.0",
+        "id": "CVE-2018-1000656",
+        "severity": "high",
+        "summary": "Flask before 1.0 has a JSON denial-of-service issue (unbounded resource use decoding crafted JSON).",
+        "fix": "Upgrade Flask to >= 1.0 (prefer a currently supported release)."
+      }
+    ],
+    "django": [
+      {
+        "affected_below": "2.2.28",
+        "id": "CVE-2022-28347",
+        "severity": "critical",
+        "summary": "Django QuerySet.annotate/aggregate/extra SQL injection via crafted column aliases (**kwargs) in affected 2.2/3.2/4.0 lines.",
+        "fix": "Upgrade to a patched Django release (2.2.28+, 3.2.13+, 4.0.4+)."
+      }
+    ],
+    "pyyaml": [
+      {
+        "affected_below": "5.4",
+        "id": "CVE-2020-14343",
+        "severity": "critical",
+        "summary": "PyYAML before 5.4: full_load / yaml.load with FullLoader can execute arbitrary code on untrusted input.",
+        "fix": "Upgrade PyYAML to >= 5.4 and prefer yaml.safe_load."
+      }
+    ]
+  },
+  "npm": {
+    "lodash": [
+      {
+        "affected_below": "4.17.12",
+        "id": "CVE-2019-10744",
+        "severity": "high",
+        "summary": "lodash before 4.17.12 is vulnerable to prototype pollution via defaultsDeep.",
+        "fix": "Upgrade lodash to >= 4.17.12."
+      }
+    ],
+    "minimist": [
+      {
+        "affected_below": "1.2.6",
+        "id": "CVE-2021-44906",
+        "severity": "critical",
+        "summary": "minimist before 1.2.6 allows prototype pollution via crafted arguments.",
+        "fix": "Upgrade minimist to >= 1.2.6 (or 0.2.4 for the 0.x line)."
+      }
+    ],
+    "axios": [
+      {
+        "affected_below": "0.21.1",
+        "id": "CVE-2020-28168",
+        "severity": "medium",
+        "summary": "axios before 0.21.1 is vulnerable to SSRF via redirects that bypass proxy restrictions.",
+        "fix": "Upgrade axios to >= 0.21.1."
+      }
+    ]
+  }
+}
