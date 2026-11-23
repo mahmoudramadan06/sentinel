@@ -1,0 +1,7 @@
+{
+  "engagement": "Example authorized bug bounty scope (edit me)",
+  "targets": ["example.com"],
+  "exclusions": [],
+  "allow_active": false,
+  "notes": "Replace with the real program scope from the program's policy page. Never add targets you are not explicitly authorized to test."
+}
