@@ -169,9 +169,13 @@ The recon registry is a fixed set of plugins wrapping standard open-source
 tools (subfinder, Amass, dig, whois, httpx, katana, nmap, nuclei) with
 allowlisted flags only: passive plugins run against scoped targets;
 active plugins additionally require `allow_active: true`; intrusive
-families (exploits, brute force, fuzzing, vulnerability NSE scripts,
-nuclei templates beyond tech-detection) are not available at all. There
-is no way to pass arbitrary flags, and no shell is ever invoked.
+families (exploits, brute force, fuzzing, NSE scripts) are not available
+at all. nuclei is present as a planning aid but its live execution is
+disabled: `-tags tech` is a moving upstream tag set, not a pinned,
+reviewed template allowlist, so it stays dry-run only until specific
+reviewed templates are vendored. nmap service detection is real probe
+traffic to in-scope addresses, not a passive read. There is no way to
+pass arbitrary flags, and no shell is ever invoked.
 
 The PTT task-tree core is forked from
 [PentestGPT](https://github.com/GreyDGL/PentestGPT) (MIT) with substantive
@@ -241,18 +245,30 @@ third-party code is scanned and belongs in the baseline once reviewed.
   text of the target). It cannot execute the target, resolve runtime
   config, or follow build-time indirection, so `needs-human-review` is a
   common and honest outcome.
-- The scope gate validates at process-launch time; each external tool
-  then re-resolves DNS itself. A hostile name that answers in-scope at
-  check time and out-of-scope at connect time (DNS rebinding / TOCTOU)
-  is mitigated - loopback, link-local and metadata-style answers are
-  always refused - but not eliminated without per-request IP pinning.
-- Crawlers and HTTP clients (katana, httpx, nuclei) follow links and
-  redirects to whatever the in-scope application references, including
-  third-party hosts. Sentinel cannot prevent that first in-tool request;
-  what it does is re-validate every host discovered in tool output
-  against the scope (with a live DNS re-check on the execute path) so
-  out-of-scope discoveries are labelled and never become the next stage's
-  target. A per-request enforcing proxy is on the roadmap.
+- Live web-plugin runs are tunneled through Sentinel's loopback egress
+  proxy (`sentinel proxy`, auto-started by `recon --execute`), which
+  re-checks scope per request and dials only DNS-validated addresses, so
+  redirects and DNS flips cannot pull the tool out of scope. This was
+  verified against the real binaries in a loopback lab (httpx v1.12.0,
+  katana v1.8.0; see `docs/validation.md`): in-scope requests passed,
+  direct out-of-scope requests and crawled out-of-scope links were
+  refused, and even the binaries' own chatter to an unrelated hardcoded
+  hostname was refused. Limits: the proxy bounds the tools' documented
+  HTTP path only - a binary can in principle open raw sockets or leak
+  through DNS, and CONNECT pins one connection, not all process traffic,
+  so this is scope enforcement for legitimate tools, not a sandbox or
+  network isolation. nuclei stays dry-run only because `-tags tech` is a
+  moving upstream tag set, not a pinned, reviewed template allowlist.
+  nmap cannot use an HTTP proxy, so its live argv carries only the
+  DNS-validated IP literals (capped at 8) and nmap resolves nothing
+  itself - but it sends real probe traffic to those addresses.
+- Passive enumeration (subfinder, Amass) queries public passive-DNS
+  databases, which discloses the target names to those third-party
+  services. That is inherent to passive recon; only the `osint` module
+  performs no network access at all.
+- Hosts discovered in tool output are re-validated against the scope
+  (with a live DNS re-check on the execute path) so out-of-scope
+  discoveries are labelled and never become the next stage's target.
 - Passive enumeration (subfinder, Amass) queries public passive-DNS
   databases, which discloses the target names to those third-party
   services. That is inherent to passive recon; only the `osint` module
@@ -269,8 +285,6 @@ third-party code is scanned and belongs in the baseline once reviewed.
   traversal) as real-target evidence justifies them.
 - Normalizing recon plugin output into the Finding schema and merging it
   into the triage report.
-- Per-request scope enforcement via a local proxy, closing the
-  crawler/redirect egress gap described in Honest limitations.
 - Rate limiting and politeness controls (per-host budgets, concurrency
   caps) for live recon.
 - A findings data store so engagements accumulate deduplicated evidence
@@ -282,7 +296,7 @@ third-party code is scanned and belongs in the baseline once reviewed.
 
 ```bash
 pip install -e ".[test]"
-python -m pytest tests/ -q   # 129 tests, fully offline
+python -m pytest tests/ -q   # 145 tests, fully offline
 ```
 
 Rules live in `src/sentinel_triage/rules/*.json`; advisories in
