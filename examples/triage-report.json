@@ -1,0 +1,657 @@
+{
+  "metadata": {
+    "tool": "sentinel-triage",
+    "version": "0.1.0",
+    "generated_at": "2026-11-22T02:53:03.121120+00:00",
+    "target": "/home/sandbox/sentinel-triage/fixtures/vulnerable_app",
+    "files_scanned": 4,
+    "files_skipped": 0,
+    "duplicates_removed": 3,
+    "baseline_suppressed": 0,
+    "warnings": [],
+    "investigations_planner": "deterministic",
+    "investigations_run": 10,
+    "llm_provider": "mock",
+    "llm_used": true,
+    "llm_is_mock": true
+  },
+  "severity_counts": {
+    "info": 0,
+    "low": 1,
+    "medium": 1,
+    "high": 12,
+    "critical": 3
+  },
+  "findings": [
+    {
+      "fingerprint": "b28a0fac16dcaf10",
+      "rule_id": "secret.aws-access-key",
+      "title": "AWS access key ID",
+      "severity": "critical",
+      "confidence": "high",
+      "risk_score": 100.0,
+      "file": "app.py",
+      "line": 14,
+      "snippet": "AWS_ACCESS_KEY = \"AKIA************MPLE\"",
+      "description": "An AWS access key ID appears to be committed to the repository. Anyone with the matching secret key can act on the account.",
+      "remediation": "Rotate the key immediately in IAM, remove it from the code and git history, and load credentials from the environment or a secrets manager.",
+      "source": "secrets",
+      "cwe": "CWE-798",
+      "triage_note": {
+        "priority_rationale": "[offline template] CRITICAL severity rule 'secret.aws-access-key' fired at app.py:14 with high confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Rotate the key immediately in IAM, remove it from the code and git history, and load credentials from the environment or a secrets manager."
+      },
+      "investigation": {
+        "fingerprint": "b28a0fac16dcaf10",
+        "verdict": "likely-placeholder",
+        "planner": "deterministic:secret",
+        "summary": "The value matches placeholder/example patterns; rotate only if any real system ever used it, and keep dummy values obviously fake.",
+        "evidence": [
+          {
+            "note": "value looks like a placeholder/example (matched: example); length 20",
+            "sources": [
+              "app.py:14"
+            ],
+            "via": "classify_credential"
+          },
+          {
+            "note": "AWS_ACCESS_KEY is not read from the environment anywhere",
+            "sources": [],
+            "via": "check_env_usage"
+          }
+        ],
+        "steps": 2,
+        "stopped_by": "policy-done",
+        "transcript": [
+          {
+            "step": 1,
+            "action": "classify_credential",
+            "args": {
+              "file": "app.py",
+              "line": 14
+            },
+            "ok": true,
+            "observation": "value looks like a placeholder/example (matched: example); length 20"
+          },
+          {
+            "step": 2,
+            "action": "check_env_usage",
+            "args": {
+              "identifier": "AWS_ACCESS_KEY"
+            },
+            "ok": true,
+            "observation": "AWS_ACCESS_KEY is not read from the environment anywhere"
+          }
+        ]
+      }
+    },
+    {
+      "fingerprint": "3d369b9c7ad5b14a",
+      "rule_id": "dep.npm.cve-2021-44906",
+      "title": "minimist 1.2.5 affected by CVE-2021-44906",
+      "severity": "critical",
+      "confidence": "high",
+      "risk_score": 100.0,
+      "file": "package.json",
+      "line": 0,
+      "snippet": "\"minimist\": \"1.2.5\"",
+      "description": "minimist before 1.2.6 allows prototype pollution via crafted arguments.",
+      "remediation": "Upgrade minimist to >= 1.2.6 (or 0.2.4 for the 0.x line).",
+      "source": "deps",
+      "cwe": null,
+      "triage_note": {
+        "priority_rationale": "[offline template] CRITICAL severity rule 'dep.npm.cve-2021-44906' fired at package.json:0 with high confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Upgrade minimist to >= 1.2.6 (or 0.2.4 for the 0.x line)."
+      },
+      "investigation": {
+        "fingerprint": "3d369b9c7ad5b14a",
+        "verdict": "no-literal-import",
+        "planner": "deterministic:dep",
+        "summary": "No literal import of minimist found in the scanned tree. Dynamic imports (importlib, __import__, plugin entry points) and transitive use are not ruled out, so reachable-risk is probably lower, not zero; still upgrade.",
+        "evidence": [
+          {
+            "note": "minimist is never imported in the scanned tree",
+            "sources": [],
+            "via": "search_imports"
+          }
+        ],
+        "steps": 1,
+        "stopped_by": "policy-done",
+        "transcript": [
+          {
+            "step": 1,
+            "action": "search_imports",
+            "args": {
+              "package": "minimist"
+            },
+            "ok": true,
+            "observation": "minimist is never imported in the scanned tree"
+          }
+        ]
+      }
+    },
+    {
+      "fingerprint": "af0c909a9dc8177e",
+      "rule_id": "dep.pypi.cve-2020-14343",
+      "title": "pyyaml 5.3.1 affected by CVE-2020-14343",
+      "severity": "critical",
+      "confidence": "high",
+      "risk_score": 100.0,
+      "file": "requirements.txt",
+      "line": 4,
+      "snippet": "pyyaml==5.3.1",
+      "description": "PyYAML before 5.4: full_load / yaml.load with FullLoader can execute arbitrary code on untrusted input.",
+      "remediation": "Upgrade PyYAML to >= 5.4 and prefer yaml.safe_load.",
+      "source": "deps",
+      "cwe": null,
+      "triage_note": {
+        "priority_rationale": "[offline template] CRITICAL severity rule 'dep.pypi.cve-2020-14343' fired at requirements.txt:4 with high confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Upgrade PyYAML to >= 5.4 and prefer yaml.safe_load."
+      },
+      "investigation": {
+        "fingerprint": "af0c909a9dc8177e",
+        "verdict": "no-literal-import",
+        "planner": "deterministic:dep",
+        "summary": "No literal import of pyyaml found in the scanned tree. Dynamic imports (importlib, __import__, plugin entry points) and transitive use are not ruled out, so reachable-risk is probably lower, not zero; still upgrade.",
+        "evidence": [
+          {
+            "note": "pyyaml is never imported in the scanned tree",
+            "sources": [],
+            "via": "search_imports"
+          }
+        ],
+        "steps": 1,
+        "stopped_by": "policy-done",
+        "transcript": [
+          {
+            "step": 1,
+            "action": "search_imports",
+            "args": {
+              "package": "pyyaml"
+            },
+            "ok": true,
+            "observation": "pyyaml is never imported in the scanned tree"
+          }
+        ]
+      }
+    },
+    {
+      "fingerprint": "6b2b762c3af282a3",
+      "rule_id": "secret.github-token",
+      "title": "GitHub token",
+      "severity": "high",
+      "confidence": "high",
+      "risk_score": 80.0,
+      "file": "app.py",
+      "line": 18,
+      "snippet": "GITHUB_TOKE*******************************************000\"  # fake placeholder",
+      "description": "A GitHub personal access or OAuth token appears to be committed to the repository.",
+      "remediation": "Revoke the token at github.com/settings/tokens, purge it from git history, and pass it via environment variables or a CI secret store.",
+      "source": "secrets",
+      "cwe": "CWE-798",
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'secret.github-token' fired at app.py:18 with high confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Revoke the token at github.com/settings/tokens, purge it from git history, and pass it via environment variables or a CI secret store."
+      },
+      "investigation": {
+        "fingerprint": "6b2b762c3af282a3",
+        "verdict": "likely-placeholder",
+        "planner": "deterministic:secret",
+        "summary": "The value matches placeholder/example patterns; rotate only if any real system ever used it, and keep dummy values obviously fake.",
+        "evidence": [
+          {
+            "note": "value looks like a placeholder/example (matched: run:0000000000000000000000000000); length 41",
+            "sources": [
+              "app.py:18"
+            ],
+            "via": "classify_credential"
+          }
+        ],
+        "steps": 1,
+        "stopped_by": "policy-done",
+        "transcript": [
+          {
+            "step": 1,
+            "action": "classify_credential",
+            "args": {
+              "file": "app.py",
+              "line": 18
+            },
+            "ok": true,
+            "observation": "value looks like a placeholder/example (matched: run:0000000000000000000000000000); length 41"
+          }
+        ]
+      }
+    },
+    {
+      "fingerprint": "4c4292ae2fd1ec66",
+      "rule_id": "dep.pypi.cve-2018-18074",
+      "title": "requests 2.19.0 affected by CVE-2018-18074",
+      "severity": "high",
+      "confidence": "high",
+      "risk_score": 80.0,
+      "file": "requirements.txt",
+      "line": 1,
+      "snippet": "requests==2.19.0",
+      "description": "Requests before 2.20.0 sends the HTTP Authorization header to an https URI upon an http-to-https redirect.",
+      "remediation": "Upgrade requests to >= 2.20.0.",
+      "source": "deps",
+      "cwe": null,
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'dep.pypi.cve-2018-18074' fired at requirements.txt:1 with high confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Upgrade requests to >= 2.20.0."
+      },
+      "investigation": {
+        "fingerprint": "4c4292ae2fd1ec66",
+        "verdict": "no-literal-import",
+        "planner": "deterministic:dep",
+        "summary": "No literal import of requests found in the scanned tree. Dynamic imports (importlib, __import__, plugin entry points) and transitive use are not ruled out, so reachable-risk is probably lower, not zero; still upgrade.",
+        "evidence": [
+          {
+            "note": "requests is never imported in the scanned tree",
+            "sources": [],
+            "via": "search_imports"
+          }
+        ],
+        "steps": 1,
+        "stopped_by": "policy-done",
+        "transcript": [
+          {
+            "step": 1,
+            "action": "search_imports",
+            "args": {
+              "package": "requests"
+            },
+            "ok": true,
+            "observation": "requests is never imported in the scanned tree"
+          }
+        ]
+      }
+    },
+    {
+      "fingerprint": "f0e7f450e06759b7",
+      "rule_id": "dep.pypi.cve-2021-33503",
+      "title": "urllib3 1.24.1 affected by CVE-2021-33503",
+      "severity": "high",
+      "confidence": "high",
+      "risk_score": 80.0,
+      "file": "requirements.txt",
+      "line": 2,
+      "snippet": "urllib3==1.24.1",
+      "description": "urllib3 before 1.26.5 allows catastrophic backtracking (ReDoS) via crafted URLs when an attacker controls the URL.",
+      "remediation": "Upgrade urllib3 to >= 1.26.5.",
+      "source": "deps",
+      "cwe": null,
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'dep.pypi.cve-2021-33503' fired at requirements.txt:2 with high confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Upgrade urllib3 to >= 1.26.5."
+      },
+      "investigation": {
+        "fingerprint": "f0e7f450e06759b7",
+        "verdict": "no-literal-import",
+        "planner": "deterministic:dep",
+        "summary": "No literal import of urllib3 found in the scanned tree. Dynamic imports (importlib, __import__, plugin entry points) and transitive use are not ruled out, so reachable-risk is probably lower, not zero; still upgrade.",
+        "evidence": [
+          {
+            "note": "urllib3 is never imported in the scanned tree",
+            "sources": [],
+            "via": "search_imports"
+          }
+        ],
+        "steps": 1,
+        "stopped_by": "policy-done",
+        "transcript": [
+          {
+            "step": 1,
+            "action": "search_imports",
+            "args": {
+              "package": "urllib3"
+            },
+            "ok": true,
+            "observation": "urllib3 is never imported in the scanned tree"
+          }
+        ]
+      }
+    },
+    {
+      "fingerprint": "042e90be964dcf09",
+      "rule_id": "dep.pypi.cve-2018-1000656",
+      "title": "flask 0.12.2 affected by CVE-2018-1000656",
+      "severity": "high",
+      "confidence": "high",
+      "risk_score": 80.0,
+      "file": "requirements.txt",
+      "line": 3,
+      "snippet": "flask==0.12.2",
+      "description": "Flask before 1.0 has a JSON denial-of-service issue (unbounded resource use decoding crafted JSON).",
+      "remediation": "Upgrade Flask to >= 1.0 (prefer a currently supported release).",
+      "source": "deps",
+      "cwe": null,
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'dep.pypi.cve-2018-1000656' fired at requirements.txt:3 with high confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Upgrade Flask to >= 1.0 (prefer a currently supported release)."
+      },
+      "investigation": {
+        "fingerprint": "042e90be964dcf09",
+        "verdict": "no-literal-import",
+        "planner": "deterministic:dep",
+        "summary": "No literal import of flask found in the scanned tree. Dynamic imports (importlib, __import__, plugin entry points) and transitive use are not ruled out, so reachable-risk is probably lower, not zero; still upgrade.",
+        "evidence": [
+          {
+            "note": "flask is never imported in the scanned tree",
+            "sources": [],
+            "via": "search_imports"
+          }
+        ],
+        "steps": 1,
+        "stopped_by": "policy-done",
+        "transcript": [
+          {
+            "step": 1,
+            "action": "search_imports",
+            "args": {
+              "package": "flask"
+            },
+            "ok": true,
+            "observation": "flask is never imported in the scanned tree"
+          }
+        ]
+      }
+    },
+    {
+      "fingerprint": "b78962cc29e26d78",
+      "rule_id": "code.js-child-process-template",
+      "title": "Shell exec with template literal",
+      "severity": "high",
+      "confidence": "medium",
+      "risk_score": 64.0,
+      "file": "app.js",
+      "line": 9,
+      "snippet": "exec('logrotate --force /etc/logrotate.d/${name}');",
+      "description": "child_process.exec with a template literal usually means interpolated input reaches a shell.",
+      "remediation": "Use execFile/spawn with an argument array, and allowlist any values that reach the command.",
+      "source": "patterns",
+      "cwe": "CWE-78",
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'code.js-child-process-template' fired at app.js:9 with medium confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Use execFile/spawn with an argument array, and allowlist any values that reach the command."
+      },
+      "investigation": {
+        "fingerprint": "b78962cc29e26d78",
+        "verdict": "unguarded-pattern",
+        "planner": "deterministic:js-sink",
+        "summary": "No sanitizer or safe-sink usage found in the tree. This is regex-level evidence, not dataflow; treat user-reachable input to this sink as XSS until the value is escaped or traced to a trusted source.",
+        "evidence": [
+          {
+            "note": "no mitigation terms found: DOMPurify, sanitize(, sanitizeHtml, textContent",
+            "sources": [],
+            "via": "check_mitigation"
+          }
+        ],
+        "steps": 1,
+        "stopped_by": "policy-done",
+        "transcript": [
+          {
+            "step": 1,
+            "action": "check_mitigation",
+            "args": {
+              "terms": [
+                "DOMPurify",
+                "sanitize(",
+                "sanitizeHtml",
+                "textContent"
+              ]
+            },
+            "ok": true,
+            "observation": "no mitigation terms found: DOMPurify, sanitize(, sanitizeHtml, textContent"
+          }
+        ]
+      }
+    },
+    {
+      "fingerprint": "6c8338f0b2d8d3bd",
+      "rule_id": "secret.generic-assignment",
+      "title": "Hardcoded credential assignment",
+      "severity": "high",
+      "confidence": "medium",
+      "risk_score": 64.0,
+      "file": "app.py",
+      "line": 16,
+      "snippet": "API_********************************000\"  # fake placeholder for the generic rule",
+      "description": "A credential-looking value is assigned as a string literal. Generic pattern: verify whether the value is a real credential or a placeholder.",
+      "remediation": "If real, rotate it and move it to an environment variable or secrets manager; if a placeholder, replace it with an obvious dummy value.",
+      "source": "secrets",
+      "cwe": "CWE-798",
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'secret.generic-assignment' fired at app.py:16 with medium confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "If real, rotate it and move it to an environment variable or secrets manager; if a placeholder, replace it with an obvious dummy value."
+      },
+      "investigation": {
+        "fingerprint": "6c8338f0b2d8d3bd",
+        "verdict": "likely-placeholder",
+        "planner": "deterministic:secret",
+        "summary": "The value matches placeholder/example patterns; rotate only if any real system ever used it, and keep dummy values obviously fake.",
+        "evidence": [
+          {
+            "note": "value looks like a placeholder/example (matched: fake, run:0000000000000000); length 28",
+            "sources": [
+              "app.py:16"
+            ],
+            "via": "classify_credential"
+          }
+        ],
+        "steps": 1,
+        "stopped_by": "policy-done",
+        "transcript": [
+          {
+            "step": 1,
+            "action": "classify_credential",
+            "args": {
+              "file": "app.py",
+              "line": 16
+            },
+            "ok": true,
+            "observation": "value looks like a placeholder/example (matched: fake, run:0000000000000000); length 28"
+          }
+        ]
+      }
+    },
+    {
+      "fingerprint": "f1608481158a1b54",
+      "rule_id": "code.sql-string-interpolation",
+      "title": "SQL built by string interpolation",
+      "severity": "high",
+      "confidence": "medium",
+      "risk_score": 64.0,
+      "file": "app.py",
+      "line": 23,
+      "snippet": "cur.execute(f\"SELECT * FROM users WHERE name = '{name}'\")",
+      "description": "Building SQL with string interpolation or concatenation is the classic SQL injection pattern.",
+      "remediation": "Use parameterized queries / prepared statements; never interpolate values into SQL text.",
+      "source": "patterns",
+      "cwe": "CWE-89",
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'code.sql-string-interpolation' fired at app.py:23 with medium confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Use parameterized queries / prepared statements; never interpolate values into SQL text."
+      },
+      "investigation": {
+        "fingerprint": "f1608481158a1b54",
+        "verdict": "unguarded-pattern",
+        "planner": "deterministic:sql",
+        "summary": "No input validation or escaping calls found in the flagged file. This is regex-level evidence, not dataflow: the value may still be constrained upstream. Treat the interpolation as injectable until it is parameterized or a dataflow check proves the input path safe.",
+        "evidence": [
+          {
+            "note": "8: import hashlib\n9: import pickle\n10: import sqlite3\n11: import subprocess\n12: \n13: # AWS's own documented EXAMPLE key pair (not real):\n14: AWS_ACCESS_KEY = \"AKIA************MPLE\"\n15: \n16: API_********************************000\"  # fake placeholder for the generic rule\n17: \n18: GITHUB_TOKE*****...",
+            "sources": [
+              "app.py:23"
+            ],
+            "via": "read_context"
+          },
+          {
+            "note": "no matches",
+            "sources": [],
+            "via": "search"
+          }
+        ],
+        "steps": 2,
+        "stopped_by": "policy-done",
+        "transcript": [
+          {
+            "step": 1,
+            "action": "read_context",
+            "args": {
+              "file": "app.py",
+              "line": 23,
+              "radius": 15
+            },
+            "ok": true,
+            "observation": "8: import hashlib\n9: import pickle\n10: import sqlite3\n11: import subprocess\n12: \n13: # AWS's own documented EXAMPLE key pair (not real):\n14: AWS_ACCESS_KEY = \"AKIA************MPLE\"\n15: \n16: API_********************************000\"  # fake placeholder for the generic rule\n17: \n18: GITHUB_TOKE*******************************************000\"  # fake placeholder\n19: \n20: \n21: def get_user(conn: sqlite3.Connection, name: str):\n22:     cur = conn.cursor()\n23:     cur.execute(f\"SELECT * FROM users WHERE name = '{name}'\")\n24:     return cur.fetchone()\n25: \n26: \n27: def add_student(conn, name: str):\n..."
+          },
+          {
+            "step": 2,
+            "action": "search",
+            "args": {
+              "pattern": "\\bint\\(|\\bisdigit\\(|\\ballowlist\\b|\\bwhitelist\\b|\\b(?:sanitize|escape|validate)[a-z_]*\\s*\\(|re\\.(?:match|fullmatch)\\(",
+              "file": "app.py"
+            },
+            "ok": true,
+            "observation": "no matches"
+          }
+        ]
+      }
+    },
+    {
+      "fingerprint": "6d0d8b3292741a1d",
+      "rule_id": "code.sql-percent-format",
+      "title": "SQL built with Python % string formatting",
+      "severity": "high",
+      "confidence": "medium",
+      "risk_score": 64.0,
+      "file": "app.py",
+      "line": 29,
+      "snippet": "\"VALUES ('%(name)s')\" % {'name': name})",
+      "description": "Applying % formatting to a SQL string interpolates values before the driver sees them, which is SQL injection when any value is user-influenced.",
+      "remediation": "Pass parameters separately (execute(query, params)) with the driver's placeholder style; never % or .format() values into SQL text.",
+      "source": "patterns",
+      "cwe": "CWE-89",
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'code.sql-percent-format' fired at app.py:29 with medium confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Pass parameters separately (execute(query, params)) with the driver's placeholder style; never % or .format() values into SQL text."
+      }
+    },
+    {
+      "fingerprint": "7564493f6f5412bf",
+      "rule_id": "code.weak-hash-password-context",
+      "title": "Weak hash near password handling",
+      "severity": "high",
+      "confidence": "medium",
+      "risk_score": 64.0,
+      "file": "app.py",
+      "line": 34,
+      "snippet": "return hashlib.md5(password.encode()).hexdigest()",
+      "description": "MD5/SHA-1 used to hash passwords is trivially crackable at scale.",
+      "remediation": "Use a password KDF: bcrypt, scrypt, or Argon2id, with a per-user salt.",
+      "source": "patterns",
+      "cwe": "CWE-327",
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'code.weak-hash-password-context' fired at app.py:34 with medium confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Use a password KDF: bcrypt, scrypt, or Argon2id, with a per-user salt."
+      }
+    },
+    {
+      "fingerprint": "fc840b104e59d176",
+      "rule_id": "code.python-shell-true",
+      "title": "Subprocess with shell=True",
+      "severity": "high",
+      "confidence": "medium",
+      "risk_score": 64.0,
+      "file": "app.py",
+      "line": 38,
+      "snippet": "subprocess.run(\"generate-report \" + report_name, shell=True)",
+      "description": "Running a subprocess through the shell makes command injection likely if any part of the command string is influenced by input.",
+      "remediation": "Pass arguments as a list with shell=False, and validate or allowlist any input that reaches the command.",
+      "source": "patterns",
+      "cwe": "CWE-78",
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'code.python-shell-true' fired at app.py:38 with medium confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Pass arguments as a list with shell=False, and validate or allowlist any input that reaches the command."
+      }
+    },
+    {
+      "fingerprint": "dafd75d23c1dcc27",
+      "rule_id": "code.python-pickle-load",
+      "title": "Deserialization with pickle",
+      "severity": "high",
+      "confidence": "medium",
+      "risk_score": 64.0,
+      "file": "app.py",
+      "line": 42,
+      "snippet": "return pickle.loads(blob)",
+      "description": "Unpickling attacker-controlled data is arbitrary code execution.",
+      "remediation": "Use JSON or another data-only format for untrusted input; reserve pickle for trusted, integrity-checked local data.",
+      "source": "patterns",
+      "cwe": "CWE-502",
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'code.python-pickle-load' fired at app.py:42 with medium confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Use JSON or another data-only format for untrusted input; reserve pickle for trusted, integrity-checked local data."
+      }
+    },
+    {
+      "fingerprint": "de723920de9817d4",
+      "rule_id": "code.python-eval",
+      "title": "Use of eval()",
+      "severity": "high",
+      "confidence": "medium",
+      "risk_score": 64.0,
+      "file": "app.py",
+      "line": 46,
+      "snippet": "return eval(expr)",
+      "description": "eval() executes arbitrary Python. If the input is reachable by users it is remote code execution.",
+      "remediation": "Replace eval() with ast.literal_eval for data, or an explicit parser/dispatch table for behavior.",
+      "source": "patterns",
+      "cwe": "CWE-95",
+      "triage_note": {
+        "priority_rationale": "[offline template] HIGH severity rule 'code.python-eval' fired at app.py:46 with medium confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Replace eval() with ast.literal_eval for data, or an explicit parser/dispatch table for behavior."
+      }
+    },
+    {
+      "fingerprint": "8a9485b4707da8ed",
+      "rule_id": "code.js-innerhtml",
+      "title": "innerHTML assignment",
+      "severity": "medium",
+      "confidence": "medium",
+      "risk_score": 48.0,
+      "file": "app.js",
+      "line": 5,
+      "snippet": "document.getElementById(\"comments\").innerHTML = text;",
+      "description": "Assigning to innerHTML with data that includes user input is a DOM XSS sink.",
+      "remediation": "Use textContent for plain text, or sanitize with a vetted library (e.g. DOMPurify) before writing HTML.",
+      "source": "patterns",
+      "cwe": "CWE-79",
+      "triage_note": {
+        "priority_rationale": "[offline template] MEDIUM severity rule 'code.js-innerhtml' fired at app.js:5 with medium confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Use textContent for plain text, or sanitize with a vetted library (e.g. DOMPurify) before writing HTML."
+      }
+    },
+    {
+      "fingerprint": "5be68ad791830727",
+      "rule_id": "code.debug-mode-enabled",
+      "title": "Debug mode enabled",
+      "severity": "low",
+      "confidence": "high",
+      "risk_score": 40.0,
+      "file": "app.py",
+      "line": 50,
+      "snippet": "debug = True",
+      "description": "Framework debug mode (e.g. Flask/Django) exposes stack traces and, for some frameworks, an interactive console.",
+      "remediation": "Drive debug mode from an environment flag that defaults to off in production.",
+      "source": "patterns",
+      "cwe": "CWE-489",
+      "triage_note": {
+        "priority_rationale": "[offline template] LOW severity rule 'code.debug-mode-enabled' fired at app.py:50 with high confidence; ranked by the deterministic severity x confidence score.",
+        "fix_guidance": "Drive debug mode from an environment flag that defaults to off in production."
+      }
+    }
+  ]
+}
