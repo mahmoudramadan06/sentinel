@@ -17,7 +17,7 @@ _STATUSES = (STATUS_TODO, STATUS_DONE, STATUS_NA)
 
 _LINE = re.compile(
     r"^(?P<indent>\s*)(?P<num>\d+(?:\.\d+)*)\.?\s+(?P<title>.*?)\s*"
-    r"(?:[-â]\s*[\(\[]?(?P<status>to-do|completed|not applicable)[\)\]]?)?$"
+    r"(?:[-–]\s*[\(\[]?(?P<status>to-do|completed|not applicable)[\)\]]?)?$"
 )
 
 
@@ -91,7 +91,7 @@ def parse_ptt(text: str) -> PTTNode:
         if not match:
             raise PTTParseError(f"line {lineno}: not a PTT line: {raw!r}")
         number = match.group("num")
-        title = match.group("title").strip().rstrip("-â ").strip()
+        title = match.group("title").strip().rstrip("-– ").strip()
         status = match.group("status") or STATUS_TODO
         parts = number.split(".")
         depth = len(parts) - 1
