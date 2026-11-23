@@ -1,0 +1,101 @@
+[
+  {
+    "id": "code.python-shell-true",
+    "title": "Subprocess with shell=True",
+    "pattern": "shell\\s*=\\s*True",
+    "extensions": [".py", ".pyw"],
+    "severity": "high",
+    "confidence": "medium",
+    "cwe": "CWE-78",
+    "description": "Running a subprocess through the shell makes command injection likely if any part of the command string is influenced by input.",
+    "remediation": "Pass arguments as a list with shell=False, and validate or allowlist any input that reaches the command."
+  },
+  {
+    "id": "code.python-eval",
+    "title": "Use of eval()",
+    "pattern": "\\beval\\s*\\(",
+    "extensions": [".py", ".pyw"],
+    "severity": "high",
+    "confidence": "medium",
+    "cwe": "CWE-95",
+    "description": "eval() executes arbitrary Python. If the input is reachable by users it is remote code execution.",
+    "remediation": "Replace eval() with ast.literal_eval for data, or an explicit parser/dispatch table for behavior."
+  },
+  {
+    "id": "code.python-pickle-load",
+    "title": "Deserialization with pickle",
+    "pattern": "\\bpickle\\.loads?\\s*\\(",
+    "extensions": [".py", ".pyw"],
+    "severity": "high",
+    "confidence": "medium",
+    "cwe": "CWE-502",
+    "description": "Unpickling attacker-controlled data is arbitrary code execution.",
+    "remediation": "Use JSON or another data-only format for untrusted input; reserve pickle for trusted, integrity-checked local data."
+  },
+  {
+    "id": "code.weak-hash-password-context",
+    "title": "Weak hash near password handling",
+    "pattern": "(?i)(md5|sha1)\\s*\\([^\\n]*(password|passwd|pwd)|(?:password|passwd|pwd)[^\\n]*=.*(md5|sha1)\\s*\\(",
+    "extensions": [".py", ".js", ".ts", ".java", ".go", ".php", ".rb"],
+    "severity": "high",
+    "confidence": "medium",
+    "cwe": "CWE-327",
+    "description": "MD5/SHA-1 used to hash passwords is trivially crackable at scale.",
+    "remediation": "Use a password KDF: bcrypt, scrypt, or Argon2id, with a per-user salt."
+  },
+  {
+    "id": "code.sql-string-interpolation",
+    "title": "SQL built by string interpolation",
+    "pattern": "(f['\"]\\s*(SELECT|INSERT|UPDATE|DELETE)\\b|['\"]\\s*(SELECT|INSERT|UPDATE|DELETE)\\b[^'\"]*['\"]\\s*%|execute\\s*\\([^\\n]*\\+)",
+    "extensions": [".py", ".js", ".ts", ".php", ".rb", ".java"],
+    "severity": "high",
+    "confidence": "medium",
+    "cwe": "CWE-89",
+    "description": "Building SQL with string interpolation or concatenation is the classic SQL injection pattern.",
+    "remediation": "Use parameterized queries / prepared statements; never interpolate values into SQL text."
+  },
+  {
+    "id": "code.sql-percent-format",
+    "title": "SQL built with Python % string formatting",
+    "pattern": "(?i)(SELECT|INSERT INTO|UPDATE|DELETE FROM|VALUES)\\b[^\\n]*['\"]\\s*%\\s*\\{",
+    "extensions": [".py", ".pyw"],
+    "severity": "high",
+    "confidence": "medium",
+    "cwe": "CWE-89",
+    "description": "Applying % formatting to a SQL string interpolates values before the driver sees them, which is SQL injection when any value is user-influenced.",
+    "remediation": "Pass parameters separately (execute(query, params)) with the driver's placeholder style; never % or .format() values into SQL text."
+  },
+  {
+    "id": "code.js-innerhtml",
+    "title": "innerHTML assignment",
+    "pattern": "\\.innerHTML\\s*=",
+    "extensions": [".js", ".jsx", ".ts", ".tsx"],
+    "severity": "medium",
+    "confidence": "medium",
+    "cwe": "CWE-79",
+    "description": "Assigning to innerHTML with data that includes user input is a DOM XSS sink.",
+    "remediation": "Use textContent for plain text, or sanitize with a vetted library (e.g. DOMPurify) before writing HTML."
+  },
+  {
+    "id": "code.js-child-process-template",
+    "title": "Shell exec with template literal",
+    "pattern": "\\b(exec|execSync)\\s*\\(\\s*`",
+    "extensions": [".js", ".jsx", ".ts", ".tsx"],
+    "severity": "high",
+    "confidence": "medium",
+    "cwe": "CWE-78",
+    "description": "child_process.exec with a template literal usually means interpolated input reaches a shell.",
+    "remediation": "Use execFile/spawn with an argument array, and allowlist any values that reach the command."
+  },
+  {
+    "id": "code.debug-mode-enabled",
+    "title": "Debug mode enabled",
+    "pattern": "(?i)\\bdebug\\s*=\\s*True\\b",
+    "extensions": [".py"],
+    "severity": "low",
+    "confidence": "high",
+    "cwe": "CWE-489",
+    "description": "Framework debug mode (e.g. Flask/Django) exposes stack traces and, for some frameworks, an interactive console.",
+    "remediation": "Drive debug mode from an environment flag that defaults to off in production."
+  }
+]
